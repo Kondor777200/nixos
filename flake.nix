@@ -8,11 +8,14 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko.url = "github:nix-community/disko/latest";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
     nixpkgs,
     home-manager,
+    disko,
     ...
   }: let
     system = "x86_64-linux";
@@ -42,6 +45,7 @@
       system = "x86_64-linux";
       modules = [
         ./configuration.nix # Your main NixOS configuration file
+        disko.nixosModules.disko
       ];
       specialArgs = {inherit nixpkgs home-manager;};
     };
