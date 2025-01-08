@@ -47,7 +47,6 @@
     hyprlock
     inkscape
     nodejs_22
-    ferdium
     wev
     nerdfetch
     starship
@@ -104,7 +103,7 @@
     anytype
     killall
     btrfs-progs
-  ];
+  ] ++ [zen-browser.packages."${system}".default];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

@@ -8,28 +8,28 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "usbhid" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModprobeConfig = '' 
-    options snd slots=snd-hda-intel
-    '';
   boot.extraModulePackages = [ ];
-  boot.kernelParams = [ "quiet" "splash" "radeon.audio=1" ];
-	
+  
   hardware.graphics.extraPackages = [pkgs.amdvlk];
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
+  
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/cfee5e2a-2ae8-4bc3-a826-e269db450a9f";
-      fsType = "ext4";
+    { device = "/dev/disk/by-uuid/cd6314bb-77d1-44b8-86d1-7ed160f0ae0a";
+      fsType = "btrfs";
+      options = [ "subvol=@" ];
     };
 
+  boot.initrd.luks.devices."luks-d3341604-566b-4a4a-9b59-e6b1fa573a03".device = "/dev/disk/by-uuid/d3341604-566b-4a4a-9b59-e6b1fa573a03";
+
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/DB84-C48D";
+    { device = "/dev/disk/by-uuid/05E2-517D";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = [ "fmask=0077" "dmask=0077" ];
     };
 
   swapDevices = [ ];
@@ -40,7 +40,6 @@
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp1s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp5s0f4u1u2c2.useDHCP = lib.mkDefault true;
   # networking.interfaces.wlp3s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

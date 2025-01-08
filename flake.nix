@@ -1,53 +1,30 @@
 {
-  description = "Home Manager configuration for albert";
+  description = "NixOS configuration";
 
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    disko.url = "github:nix-community/disko/latest";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 
-  outputs = {
-    nixpkgs,
-    home-manager,
-    disko,
-    ...
-  }: let
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-  in {
-    # Home Manager configuration for albert
-    homeConfigurations."albert" = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
+  outputs = inputs@{ nixpkgs, home-manager, ... }: {
+    nixosConfigurations = {
+      nixos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.albert = import ./home.nix;
 
-      # Specify your home configuration modules here, for example,
-      # the path to your home.nix.
-      modules = [
-        ./configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.albert = import ./home.nix;
-        }
-      ];
-      # Optionally pass extra special arguments to home.nix
-      extraSpecialArgs = {};
-    };
-
-    # NixOS configuration for the system
-    nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./configuration.nix # Your main NixOS configuration file
-        disko.nixosModules.disko
-      ];
-      specialArgs = {inherit nixpkgs home-manager;};
+            # Optionally, use home-manager.extraSpecialArgs to pass
+            # arguments to home.nix
+          }
+        ];
+      };
     };
   };
 }
