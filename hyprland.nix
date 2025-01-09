@@ -53,7 +53,7 @@
         "$mod, L, exec, hyprlock"
         "$mod, Q, exec, kitty"
         "$mod, F, exec, zen"
-        "$mod, SPACE, exec, ./.config/rofi/scripts/launcher_t7"
+        "$mod, SPACE, exec, walker"
         # kill active
         "$mod, C, killactive,"
         # movefocus

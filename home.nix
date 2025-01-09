@@ -1,5 +1,6 @@
 {
   zen-browser,
+  walker,
   config,
   pkgs,
   ...
@@ -24,87 +25,89 @@
     (import ./alacritty.nix)
     (import ./hyprpaper.nix)
     (import ./kitty.nix)
+    walker.homeManagerModules.default
   ];
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
-    bluetui
-    blender
-    gjs
-    udiskie
-    zed-editor
-    bottom
-    kitty
-    viu
-    scrcpy
-    rofi-wayland
-    alejandra
-    eww
-    lazygit
-    gnupg
-    pass
-    libreoffice
-    hyprpaper
-    hyprlock
-    inkscape
-    nodejs_22
-    wev
-    nerdfetch
-    starship
-    zoxide
-    zsh
-    adwaita-icon-theme
-    morewaita-icon-theme
-    nwg-drawer
-    openssl
-    nwg-dock-hyprland
-    unzip
-    gcc
-    git
-    vscodium
-    nodePackages.pnpm
-    firefox-devedition-bin
-    btop
-    zsh
-    neovim
-    alacritty
-    fd
-    brightnessctl
-    swww
-    grim
-    slurp
-    wf-recorder
-    wl-clipboard
-    wayshot
-    swappy
-    hyprpicker
-    pavucontrol
-    networkmanager
-    gtk3
-    haskellPackages.gi-dbusmenugtk3
-    alsa-utils
-    alsa-lib
-    alsa-firmware
-    alsa-plugins
-    lsof
-    linux-firmware
-    sof-firmware
-    google-cursor
-    nwg-look
-    glib
-    dconf
-    krita
-    localsend
-    git-credential-manager
-    cargo
-    rustc
-    haskellPackages.webkit2gtk3-javascriptcore
-    android-studio
-    tldr
-    anytype
-    killall
-    btrfs-progs
-  ] ++ [zen-browser.packages."${system}".default];
+  home.packages = with pkgs;
+    [
+      bluetui
+      blender
+      gjs
+      udiskie
+      bottom
+      kitty
+      viu
+      scrcpy
+      rofi-wayland
+      alejandra
+      eww
+      lazygit
+      gnupg
+      pass
+      libreoffice
+      hyprpaper
+      hyprlock
+      inkscape
+      nodejs_22
+      wev
+      nerdfetch
+      starship
+      zoxide
+      zsh
+      adwaita-icon-theme
+      morewaita-icon-theme
+      nwg-drawer
+      openssl
+      nwg-dock-hyprland
+      unzip
+      gcc
+      git
+      vscodium
+      nodePackages.pnpm
+      firefox-devedition-bin
+      btop
+      zsh
+      neovim
+      alacritty
+      fd
+      brightnessctl
+      swww
+      grim
+      slurp
+      wf-recorder
+      wl-clipboard
+      wayshot
+      swappy
+      hyprpicker
+      pavucontrol
+      networkmanager
+      gtk3
+      haskellPackages.gi-dbusmenugtk3
+      alsa-utils
+      alsa-lib
+      alsa-firmware
+      alsa-plugins
+      lsof
+      linux-firmware
+      sof-firmware
+      google-cursor
+      nwg-look
+      glib
+      dconf
+      krita
+      localsend
+      git-credential-manager
+      cargo
+      rustc
+      haskellPackages.webkit2gtk3-javascriptcore
+      android-studio
+      tldr
+      anytype
+      killall
+      btrfs-progs
+    ]
+    ++ [zen-browser.packages."${system}".default];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -122,6 +125,21 @@
   services.udiskie.enable = true;
   home.sessionVariables = {
     # EDITOR = "emacs";
+  };
+  programs.walker = {
+    enable = true;
+    runAsService = true;
+
+    # All options from the config.json can be used here.
+    config = {
+      search.placeholder = "Example";
+      ui.fullscreen = true;
+      list = {
+        height = 200;
+      };
+      websearch.prefix = "?";
+      switcher.prefix = "/";
+    };
   };
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
